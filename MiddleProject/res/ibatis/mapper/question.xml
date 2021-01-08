@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+			
+			<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="question">
+
+	<!-- 전체질문 보기 -->
+	<select id="adSelectAll" resultClass="QuVO">
+		select * from question
+	</select>
+	
+	
+	
+
+	<!-- 전체 질문 중 내질문만보기 -->
+	<select id="selectAll" resultClass="QuVO">
+		select * from question where
+		mem_id = #mem_id#
+	</select>
+
+
+
+
+	<!-- 게시글 삭제 -->
+	<delete id="questionDelete" parameterClass="int">
+		delete question where
+		qu_num = #qu_num#
+	</delete>
+	
+	
+
+	<!-- 글쓰기 저장 -->
+	<insert id="insertQuestion" parameterClass="QuVO">
+		insert into question
+		values(question_seq.nextval, #mem_id#, #qu_title#,
+		#qu_content#, sysdate)
+
+		<selectKey keyProperty="qu_num" resultClass="int">
+			select
+			question_seq.currval from dual
+		</selectKey>
+	</insert>
+
+
+	<!-- 게시글 수정 대상의 글을 가져오기 -->
+	<select id="updateSelect" resultClass="QuVO"
+		parameterClass="int">
+		select * from question where qu_num = #qu_num#
+	</select>
+
+	<!-- 게시글 수정 -->
+	<update id="updateQuestion" parameterClass="QuVO">
+		update question set
+		qu_title = #qu_title#, qu_content=#qu_content#
+		where qu_num=#qu_num#
+	</update>
+
+
+
+
+
+
+	<!-- 게시글 수 가져오기 -->
+	<select id="getTotalCount" resultClass="int">
+		select count(*) from
+		question
+	</select>
+
+<!-- 페이징 -->
+	<select id="selectPage" parameterClass="map" resultClass="QuVO">
+		select A.* from (
+		select rownum as rnum, B.* from (
+		select * from question
+		order by qu_num desc) B
+   <![CDATA[
+      where rownum <= #end#) A 
+   where A.rnum >=#start#
+  ]]>
+	</select>
+
+<!-- 키워드 검색 -->
+	<select id="q_search" resultClass="QuVO">
+
+		select * from question where mem_id = #mem_id# 
+		and (qu_title like '%' || #qu_title# || '%'
+		or
+		qu_content like '%' || #qu_content# || '%')
+	</select>
+
+
+</sqlMap>

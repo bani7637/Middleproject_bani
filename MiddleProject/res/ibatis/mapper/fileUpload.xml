@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+			
+			<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="fileUp">
+
+	<resultMap class="fileUpload.vo.FileUpVO" id="fileMap">
+		<result property="file_num" column="FILE_NUM" />
+		<result property="file_name" column="FILE_NAME" />
+		<result property="file_extend" column="FILE_EXTEND" />
+		<result property="file_path" column="FILE_PATH" />
+		<result property="file_writer" column="FILE_WRITER" />
+	</resultMap>
+
+
+	<!-- 파일 업로드 -->
+	<insert id="insertFile">
+
+		<selectKey keyProperty="file_num" resultClass="int">
+			select
+			fileupload_seq.nextval from dual
+		</selectKey>
+		insert into fileupload
+		(file_num,
+		file_name,
+		file_extend,
+		file_path,
+		file_writer
+		)
+
+		values(
+		#file_num#, #file_name#, #file_extend#, #file_path#, #file_writer#
+		)
+		
+	</insert>
+
+	<!-- 증명서류  리스트 -->
+	<select id="selectFile" resultMap="fileMap">
+		select * from fileupload
+		where file_writer = #file_writer# 
+
+	</select>
+	
+	<!-- 이미지 출력용  select 한개만가져감 -->
+	<select id="select" resultMap="fileMap">
+
+		select * from fileupload
+		where file_writer = #file_writer# and file_extend = 'png'
+	</select>
+	
+	<!-- 파일삭제 -->
+	<delete id="fileDelete" parameterClass="int">
+	delete fileupload where file_num = #file_num#  
+	</delete>
+	
+	<!-- 증명서류 다운용 -->
+	
+	<select id="filedown" resultMap="fileMap">
+		select * from fileupload
+		where file_num = #file_num# 
+
+	</select>
+	
+	
+</sqlMap>			

@@ -1,0 +1,186 @@
+
+<html>
+<head>
+<meta charset="UTF-8">
+<script src= "../js/board_qna.js"></script>
+
+<link href="../css/qna.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src= "../js/fileview.js"></script>
+<script type="text/javascript">
+	// 객체생성 - 동적으로 속성을 추가해서 사용 - bonum, name, cont 
+	reply = { };
+	write = { };
+$(function() {
+readServer();
+
+
+
+	$('.box').on('click', '.action', function() {
+		actionname = $(this).attr('name');
+		idx =$(this).attr('idx');
+		
+		if(actionname == "modify"){
+			viewServer();
+
+			
+		}else if(actionname == "delete"){
+			deleteServer();
+
+		}else if(actionname == "list"){
+			reply.qu_num = idx;
+			replyListServer(this);
+		}
+	})
+	
+	$('#send').on('click', function() {
+		
+		writeServer(); 
+
+		$('#wModal').modal('hide');
+	
+		$('.indata').val("");
+	})
+	
+	$('#usend').on('click', function() {
+		updateboardServer();
+		$('#uModal').modal('hide');
+		$('.indata').val("");
+	})
+	
+	$('.close1').on('click', function() {
+		location.reload();
+	})
+	
+	
+	$('#ksearch').on('click', function() {
+		
+		cfind = $('#search').val();
+
+		
+		searchboardServer(cfind);
+		
+		
+		$('.indata').val("");
+	})
+
+	
+
+})
+</script>
+<style type="text/css">
+
+#search{
+width: 250px;
+}
+ .navelogo{
+/*     border: 1px solid black; */
+    height: 65px;
+ }
+  .navbar-inverse{
+  border : #779af5;
+  background-color : #779af5;
+  }
+  .navbar-inverse .navbar-nav>li>a{
+		color : white;
+	}
+	#Advertising{
+	
+	position : absolute; 
+	top : 37%;
+	left : 77%;
+	width :200px;
+	}
+	#write{
+	position : absolute; 
+	top : 18%;
+	left : 2%;
+	}
+	
+</style>
+</head>
+<body>
+
+<!-- 질문작성 -->
+	<div style="float: right; padding: 20px;">
+	    <p>키워드 검색창</p>
+		<input type="text" id="search" class="indata">
+		<input id="ksearch" type="button" value="검색"> </div>
+		<div id="result1"></div>
+		<br><br>
+<input type="button" value="질문하기" id="write" data-toggle="modal" data-target="#wModal" class="btn btn-info btn-lg">
+
+	
+
+
+	<div class="box result">
+	</div>
+	
+		
+		
+<div id="wModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      
+      <!-- X버튼 -->
+        <button type="button" class="close close1" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">글쓰기</h4>
+      </div>
+      <div class="modal-body">
+        	<form name=wform id="wform">
+        	<label for="qu_title">제목</label><input type="text" name="qu_title" id="qu_title" class="indata"><br>
+        	<label for="qu_content">내용</label><br>
+        	<textarea id="qu_contnet" name="qu_content" rows="20" cols="50" class="indata"></textarea><br>
+			<input id="send" type="button" value="전송">
+        	</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default close close1" data-dismiss="modal" id="close">Close</button>
+      </div>
+    </div>
+
+    </div>
+    </div>
+
+
+	
+	<!--  글 수 정 Modal -->
+<div id="uModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">글 수정</h4>
+      </div>
+      <div class="modal-body">
+        	<form name=uform id="uform">
+        	<input class="indata" type="hidden" id="uqu_num" name="qu_num">
+        	<label for="uqu_title">제목</label><input type="text" name="qu_title" id="uqu_title" class="indata"><br>
+        	<label for="uqu_content">내용</label><br>
+        	<textarea id="uqu_content" name="qu_content" rows="20" cols="50" class="indata"></textarea><br>
+			<input id="usend" type="button" value="전송" >
+        	</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default close" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+
+
+
+
+
+  </div>
+</div>
+
+</body>
+</html>
